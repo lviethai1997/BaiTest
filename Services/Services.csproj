@@ -12,7 +12,10 @@
 
 	<ItemGroup>
 	  <Folder Include="Catalog\OrderDetails\" />
-	  <Folder Include="Catalog\Orders\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="System.Security.Permissions" Version="6.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

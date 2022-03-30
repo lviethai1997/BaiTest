@@ -6,7 +6,7 @@ using ViewModels.Catalog.Products;
 
 namespace AdminApplication.Controllers
 {
-    public class ProductController : Controller
+    public class ProductController : BaseController
     {
         private readonly IProductService _productService;
         private readonly IProductCategoryService _productCategoryService;
@@ -85,12 +85,6 @@ namespace AdminApplication.Controllers
             ViewBag.category = cate;
 
             if (!ModelState.IsValid)
-            {
-                return View();
-            }
-
-
-            if (request.Image == null)
             {
                 return View();
             }

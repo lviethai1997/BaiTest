@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace AdminApplication.Controllers
 {
-    public class HomeController : BaseController
+    public class OrderController : Controller
     {
         public IActionResult Index()
         {

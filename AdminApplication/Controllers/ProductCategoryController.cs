@@ -5,7 +5,7 @@ using ViewModels.Catalog.ProductCategories;
 
 namespace AdminApplication.Controllers
 {
-    public class ProductCategoryController : Controller
+    public class ProductCategoryController : BaseController
     {
 
         private readonly IProductCategoryService _productCategoryService;

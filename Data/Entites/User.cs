@@ -15,7 +15,7 @@ namespace Data.Entites
         public string Username { get; set; }
 
         [Required]
-        [MaxLength(20)]
+        [MaxLength(100)]
         public string Password { get; set; }
 
         [Required]
