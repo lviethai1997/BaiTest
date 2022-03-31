@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{D0F49F47-A99F-476B-A26C-4142774E39BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "Data\Data.csproj", "{D0F49F47-A99F-476B-A26C-4142774E39BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewModels", "ViewModels\ViewModels.csproj", "{1673F0B4-0E3F-414F-8644-51E577514A91}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewModels", "ViewModels\ViewModels.csproj", "{1673F0B4-0E3F-414F-8644-51E577514A91}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminApplication", "AdminApplication\AdminApplication.csproj", "{3EDF3AAC-0042-48AF-81FA-82A1A094BB7E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminApplication", "AdminApplication\AdminApplication.csproj", "{3EDF3AAC-0042-48AF-81FA-82A1A094BB7E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{98B39115-A3AD-4993-B1DE-CC48C75BEDF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{98B39115-A3AD-4993-B1DE-CC48C75BEDF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebClientApplication", "WebClientApplication\WebClientApplication.csproj", "{2BF3E79F-AA04-4806-84E1-89E719205A1F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{98B39115-A3AD-4993-B1DE-CC48C75BEDF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98B39115-A3AD-4993-B1DE-CC48C75BEDF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98B39115-A3AD-4993-B1DE-CC48C75BEDF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BF3E79F-AA04-4806-84E1-89E719205A1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BF3E79F-AA04-4806-84E1-89E719205A1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BF3E79F-AA04-4806-84E1-89E719205A1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BF3E79F-AA04-4806-84E1-89E719205A1F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,5 @@
 ﻿using Data.EF;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,16 +21,9 @@ namespace Services.Catalog.Users
 
         public async Task<bool> Login(LoginRequest loginRequest)
         {
-            var findUser = await _context.User.FindAsync(loginRequest.Username);
-
-            if(findUser == null)
-            {
-                return false;
-            }
-
             string password = GetMD5(loginRequest.Password);
 
-            var checkLogin =  _context.User.FirstOrDefault(x => x.Username == loginRequest.Username && x.Password == password);
+            var checkLogin = await  _context.User.FirstOrDefaultAsync(x => x.Username == loginRequest.Username && x.Password == password);
             if(checkLogin == null)
             { return false; }
 

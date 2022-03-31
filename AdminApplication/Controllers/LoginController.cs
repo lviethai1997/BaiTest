@@ -29,7 +29,7 @@ namespace AdminApplication.Controllers
                 return View();
             }
 
-            var login = _userService.Login(request);
+            var login = await _userService.Login(request);
 
             if (login == null)
             {

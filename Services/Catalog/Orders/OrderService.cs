@@ -1,11 +1,7 @@
 ﻿using Data.EF;
 using Data.Entites;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ViewModels.Catalog.Checkout;
 
 namespace Services.Catalog.Orders
 {
@@ -16,6 +12,40 @@ namespace Services.Catalog.Orders
         public OrderService(ShopDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<bool> ComfirmOrder(CheckOutRequest request)
+        {
+            var order = new Order()
+            {
+                CustomerAddress = request.user.Address,
+                CustomerEmail = request.user.Email,
+                CustomerMobile = request.user.Mobile,
+                CustommerId = request.user.ID,
+                CustomerName = request.user.FullName,
+                CreateDate = DateTime.Now,
+                Status = 0,
+                CreatedBy = request.user.Username,
+                CustomerMessage = "OK"
+            };
+            var addOrder =  _context.Orders.Add(order);
+             _context.SaveChanges();
+
+            var orderDetails = new List<OrderDetail>();
+            foreach (var item in request.carts)
+            {
+                var detail = new OrderDetail();
+                detail.OrderID = order.ID;
+                detail.ProductID = item.product.ID;
+                detail.Quantity = item.quantity;
+                detail.Price = item.product.Price;
+                orderDetails.Add(detail);
+                var addOrderDetail =  _context.OrderDetails.Add(detail);
+            }
+
+             _context.SaveChanges();
+
+            return true;
         }
 
         public Task<bool> CompleteOrder(int id)
@@ -37,9 +67,7 @@ namespace Services.Catalog.Orders
                               where od.OrderID == id
                               select new { o, od, p, u };
 
-
-            return  new Order();
-
+            return new Order();
         }
 
         public async Task<List<Order>> getOrders()

@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Services.Common;
 using System.Net.Http.Headers;
+using ViewModels.Catalog.Cart;
+using ViewModels.Catalog.Checkout;
 using ViewModels.Catalog.ProductCategories;
 using ViewModels.Catalog.Products;
 
@@ -32,7 +34,7 @@ namespace Services.Catalog.Products
                 CreateTime = DateTime.Now,
                 UpdatedDate = DateTime.Now,
                 Status = request.Status
-                
+
             };
 
             if (request.Image != null)
@@ -55,10 +57,18 @@ namespace Services.Catalog.Products
             return true;
         }
 
+        public async Task<Product> FindById(int id)
+        {
+            var product = await _shopDbContext.Products.Where(x => x.ID == id).FirstOrDefaultAsync();
+
+            return product;
+        }
+
         public async Task<List<Product>> GetAll()
         {
             var products = await _shopDbContext.Products.Select(x => new Product()
             {
+                ImagePath = x.ImagePath,
                 ID = x.ID,
                 Name = x.Name,
                 CategoryID = x.CategoryID,
@@ -93,6 +103,40 @@ namespace Services.Catalog.Products
             };
 
             return result;
+        }
+
+        public async Task<CheckOutRequest> getCheckOut(string userName, List<CartItemRequest> request)
+        {
+            var getUser = await _shopDbContext.User.Where(x=>x.Username == userName.Trim()).FirstOrDefaultAsync();
+
+            var cars = new CheckOutRequest()
+            {
+                user = getUser,
+                carts = request
+            };
+
+            return cars;
+
+        }
+
+        public async Task<List<ProductInCategoryRequest>> getProductByCateId(int id)
+        {
+            var products = from p in _shopDbContext.Products
+                           join pc in _shopDbContext.ProductCategories on p.CategoryID equals pc.ID
+                           where p.CategoryID == id && p.Status == 0
+                           select new { p, pc };
+
+            var reuslt = await products.Select(x => new ProductInCategoryRequest()
+            {
+                ProductId = x.p.ID,
+                ProductName = x.p.Name,
+                Price = x.p.Price,
+                ImagePath = x.p.ImagePath,
+                CateId = x.pc.ID,
+                CateName = x.pc.Name,
+            }).ToListAsync();
+
+            return reuslt;
         }
 
         public async Task<bool> HideProduct(int id)

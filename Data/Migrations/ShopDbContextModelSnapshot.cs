@@ -94,10 +94,9 @@ namespace Data.Migrations
 
                     b.HasKey("OrderID", "ProductID");
 
-                    b.HasIndex("ProductID")
-                        .IsUnique();
+                    b.HasIndex("ProductID");
 
-                    b.ToTable("OrderDetails");
+                    b.ToTable("OrderDetails", (string)null);
                 });
 
             modelBuilder.Entity("Data.Entites.Product", b =>
@@ -246,8 +245,8 @@ namespace Data.Migrations
                         .IsRequired();
 
                     b.HasOne("Data.Entites.Product", "Product")
-                        .WithOne("OrderDetail")
-                        .HasForeignKey("Data.Entites.OrderDetail", "ProductID")
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -274,8 +273,7 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Entites.Product", b =>
                 {
-                    b.Navigation("OrderDetail")
-                        .IsRequired();
+                    b.Navigation("OrderDetails");
                 });
 
             modelBuilder.Entity("Data.Entites.ProductCategory", b =>

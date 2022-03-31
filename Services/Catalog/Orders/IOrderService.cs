@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ViewModels.Catalog.Checkout;
 
 namespace Services.Catalog.Orders
 {
@@ -16,5 +17,7 @@ namespace Services.Catalog.Orders
         public Task<bool> DestroyOrder(int id);
         public Task<bool> TakeOrder(int id);
         public Task<bool> CompleteOrder(int id);
+
+        public Task<bool> ComfirmOrder(CheckOutRequest request);
     }
 }

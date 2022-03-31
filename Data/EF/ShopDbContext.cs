@@ -12,9 +12,13 @@ namespace Data.EF
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<OrderDetail>()
-        .HasKey(p => new { p.OrderID, p.ProductID });
+            modelBuilder.Entity<OrderDetail>().ToTable("OrderDetails");
+
+            modelBuilder.Entity<OrderDetail>().HasKey(x => new { x.OrderID, x.ProductID });
+            modelBuilder.Entity<OrderDetail>().HasOne(x => x.Order).WithMany(x => x.OrderDetails).HasForeignKey(x => x.OrderID);
+            modelBuilder.Entity<OrderDetail>().HasOne(x => x.Product).WithMany(x => x.OrderDetails).HasForeignKey(x => x.ProductID);
             base.OnModelCreating(modelBuilder);
+
         }
 
         public DbSet<Product> Products { get; set; }
@@ -22,5 +26,6 @@ namespace Data.EF
         public DbSet<User> User { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
+
     }
 }

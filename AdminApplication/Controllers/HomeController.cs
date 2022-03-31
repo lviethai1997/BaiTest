@@ -1,12 +1,16 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace AdminApplication.Controllers
 {
-    public class HomeController : BaseController
+    public class HomeController : Controller
     {
         public IActionResult Index()
         {
+            var session = HttpContext.Session.GetString("SessionUser");
+            if (session == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
             return View();
         }
     }

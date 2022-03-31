@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ViewModels.Catalog.Cart;
+using ViewModels.Catalog.Checkout;
 using ViewModels.Catalog.ProductCategories;
 using ViewModels.Catalog.Products;
 
@@ -19,9 +21,14 @@ namespace Services.Catalog.Products
 
         Task<bool> HideProduct(int id);
 
+        Task<List<ProductInCategoryRequest>> getProductByCateId(int id);
+
         Task<ProductRequest> GetById(int id);
         Task<List<Product>> GetAll();
 
+        Task<Product> FindById(int id);
+
+        Task<CheckOutRequest> getCheckOut(string userName, List<CartItemRequest> request);
        
     }
 }

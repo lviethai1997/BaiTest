@@ -36,7 +36,6 @@ namespace Data.Entites
 
         [ForeignKey("CategoryID")]
         public virtual ProductCategory ProductCategory { get; set; }
-
-        public virtual OrderDetail OrderDetail { get; set; }
+        public virtual List<OrderDetail> OrderDetails { get; set; }
     }
 }

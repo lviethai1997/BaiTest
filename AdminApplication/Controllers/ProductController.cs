@@ -6,7 +6,7 @@ using ViewModels.Catalog.Products;
 
 namespace AdminApplication.Controllers
 {
-    public class ProductController : BaseController
+    public class ProductController : Controller
     {
         private readonly IProductService _productService;
         private readonly IProductCategoryService _productCategoryService;
@@ -34,6 +34,7 @@ namespace AdminApplication.Controllers
         {
             var Category = _productCategoryService.getCategory();
             List<CbCategories> cate = await Category;
+
             ViewBag.category = cate;
 
 
