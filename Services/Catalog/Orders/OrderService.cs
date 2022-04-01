@@ -43,6 +43,8 @@ namespace Services.Catalog.Orders
                 detail.Quantity = item.quantity;
                 detail.Price = item.product.Price;
                 orderDetails.Add(detail);
+                var updateProduct = _context.Products.Where(x => x.ID == item.product.ID).FirstOrDefault();
+                updateProduct.Quantity = updateProduct.Quantity - item.quantity;
                 var addOrderDetail = _context.OrderDetails.Add(detail);
             }
 

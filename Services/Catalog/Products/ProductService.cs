@@ -15,6 +15,7 @@ namespace Services.Catalog.Products
     {
         private readonly ShopDbContext _shopDbContext;
         private readonly IStorageService _storageService;
+        private const string USER_CONTENT_FOLDER_NAME = "user-content";
 
         public ProductService(ShopDbContext shopDbContext, IStorageService serviceProvider)
         {
@@ -157,6 +158,7 @@ namespace Services.Catalog.Products
             product.Description = request.Description;
             product.UpdatedDate = DateTime.Now;
             product.Status = request.Status;
+            await _storageService.DeleteFileAsync(product.ImagePath);
 
             if (request.Image != null)
             {
@@ -171,10 +173,10 @@ namespace Services.Catalog.Products
 
         private async Task<string> SaveFile(IFormFile file)
         {
-            var originalFilename = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(originalFilename)}";
+            var originalFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
             await _storageService.SaveFileAsync(file.OpenReadStream(), fileName);
-            return fileName;
+            return "/" + USER_CONTENT_FOLDER_NAME + "/" + fileName;
         }
     }
 }

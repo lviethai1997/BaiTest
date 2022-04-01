@@ -19,13 +19,12 @@
     <div class="row">
         @foreach (var item in Model)
         {
-            var addtoCart = "/AddToCart-" + Model+".html";
+            var addtoCart = "/AddToCart-" +item.ProductId+".html";
             var url = "/product-" + item.ProductId + ".html";
-            var path = item.ImagePath;
 
             <div class="col-lg-4 col-md-6">
                 <div class="single-product">
-                    <img class="img-fluid" src="@path" alt="">
+                    <img class="img-fluid" src="@(Services.SystemConstants.Baseurl+item.ImagePath)" alt="@item.ProductName">
                     <div class="product-details">
                         <h6>
                             @item.ProductName

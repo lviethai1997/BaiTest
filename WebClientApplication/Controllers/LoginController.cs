@@ -31,7 +31,7 @@ namespace WebClientApplication.Controllers
             if (login == false)
             {
                 ModelState.AddModelError("", "Tài khoản hoặc mật khẩu không đúng");
-                return View("Index");
+                return RedirectToAction("Index", "Login");
             }
 
             HttpContext.Session.SetString(UserKey, request.Username);

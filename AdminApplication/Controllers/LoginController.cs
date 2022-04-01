@@ -9,7 +9,6 @@ namespace AdminApplication.Controllers
     public class LoginController : Controller
     {
         private readonly IUserService _userService;
-
         public LoginController(IUserService userService)
         {
             _userService = userService;

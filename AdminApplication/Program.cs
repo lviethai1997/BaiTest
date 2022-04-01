@@ -36,7 +36,6 @@ builder.Services.AddTransient<IStorageService, FileStorageService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
 
-
 IMvcBuilder build = builder.Services.AddRazorPages();
 build.AddRazorRuntimeCompilation();
 build.Services.AddMemoryCache();

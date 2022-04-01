@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 using Services.Catalog.Orders;
 using Services.Catalog.Products;
 using ViewModels.Catalog.Cart;
-using ViewModels.Catalog.Checkout;
 
 namespace WebClientApplication.Controllers
 {
@@ -24,10 +23,8 @@ namespace WebClientApplication.Controllers
             return View();
         }
 
-      
         public async Task<IActionResult> ComfirmOrder()
         {
-
             string Username = HttpContext.Session.GetString("SessionUser");
             var items = await _productService.getCheckOut(Username, GetCartItems());
 
@@ -35,7 +32,6 @@ namespace WebClientApplication.Controllers
 
             return RedirectToAction("Confirmation", "Product");
         }
-
 
         [Route("/Confirmation", Name = "Confirmation")]
         public async Task<IActionResult> Confirmation()
@@ -76,6 +72,10 @@ namespace WebClientApplication.Controllers
         public async Task<IActionResult> AddToCart(int id)
         {
             var product = await _productService.FindById(id);
+            if (product.Quantity == 0)
+            {
+                return RedirectToAction("Index", "Home");
+            }
 
             var cart = GetCartItems();
             var cartitem = cart.Find(p => p.product.ID == id);
