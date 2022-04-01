@@ -60,23 +60,19 @@ namespace Services.Catalog.Products
         public async Task<Product> FindById(int id)
         {
             var product = await _shopDbContext.Products.Where(x => x.ID == id).FirstOrDefaultAsync();
-
             return product;
         }
 
-        public async Task<List<Product>> GetAll()
+        public async Task<List<ProductListRequest>> GetAll()
         {
-            var products = await _shopDbContext.Products.Select(x => new Product()
+            var products = await _shopDbContext.Products.Select(x => new ProductListRequest()
             {
                 ImagePath = x.ImagePath,
                 ID = x.ID,
                 Name = x.Name,
-                CategoryID = x.CategoryID,
+                CateName = _shopDbContext.ProductCategories.Where(p => p.ID == x.CategoryID).Select(p => p.Name).FirstOrDefault(),
                 Quantity = x.Quantity,
                 Price = x.Price,
-                Description = x.Description,
-                CreateTime = DateTime.Now,
-                UpdatedDate = DateTime.Now,
                 Status = x.Status
             }).ToListAsync();
 
@@ -107,7 +103,7 @@ namespace Services.Catalog.Products
 
         public async Task<CheckOutRequest> getCheckOut(string userName, List<CartItemRequest> request)
         {
-            var getUser = await _shopDbContext.User.Where(x=>x.Username == userName.Trim()).FirstOrDefaultAsync();
+            var getUser = await _shopDbContext.User.Where(x => x.Username == userName.Trim()).FirstOrDefaultAsync();
 
             var cars = new CheckOutRequest()
             {

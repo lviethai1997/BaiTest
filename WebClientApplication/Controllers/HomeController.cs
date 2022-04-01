@@ -1,6 +1,6 @@
-﻿using Data.Entites;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Services.Catalog.Products;
+using ViewModels.Catalog.Products;
 
 namespace WebClientApplication.Controllers
 {
@@ -16,7 +16,7 @@ namespace WebClientApplication.Controllers
         public async Task<IActionResult> Index()
         {
             var products = await _productService.GetAll();
-            IEnumerable<Product> productsList = products;
+            IEnumerable<ProductListRequest> productsList = products;
             return View(productsList);
         }
     }

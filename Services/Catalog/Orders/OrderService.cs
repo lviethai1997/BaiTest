@@ -2,6 +2,8 @@
 using Data.Entites;
 using Microsoft.EntityFrameworkCore;
 using ViewModels.Catalog.Checkout;
+using ViewModels.Catalog.OrderDetails;
+using ViewModels.Catalog.Orders;
 
 namespace Services.Catalog.Orders
 {
@@ -14,6 +16,7 @@ namespace Services.Catalog.Orders
             _context = context;
         }
 
+        // -1 da huy don,0 dang cho xu ly, 1 dang van chuyen, 2 hoan thanh
         public async Task<bool> ComfirmOrder(CheckOutRequest request)
         {
             var order = new Order()
@@ -28,8 +31,8 @@ namespace Services.Catalog.Orders
                 CreatedBy = request.user.Username,
                 CustomerMessage = "OK"
             };
-            var addOrder =  _context.Orders.Add(order);
-             _context.SaveChanges();
+            var addOrder = _context.Orders.Add(order);
+            _context.SaveChanges();
 
             var orderDetails = new List<OrderDetail>();
             foreach (var item in request.carts)
@@ -40,34 +43,93 @@ namespace Services.Catalog.Orders
                 detail.Quantity = item.quantity;
                 detail.Price = item.product.Price;
                 orderDetails.Add(detail);
-                var addOrderDetail =  _context.OrderDetails.Add(detail);
+                var addOrderDetail = _context.OrderDetails.Add(detail);
             }
 
-             _context.SaveChanges();
+            _context.SaveChanges();
 
             return true;
         }
 
-        public Task<bool> CompleteOrder(int id)
+        public async Task<bool> CompleteOrder(int id)
         {
-            throw new NotImplementedException();
+            var order = await _context.Orders.Where(o => o.ID == id).FirstOrDefaultAsync();
+            order.Status = 2;
+            await _context.SaveChangesAsync();
+            return true;
         }
 
-        public Task<bool> DestroyOrder(int id)
+        public async Task<bool> DestroyOrder(int id)
         {
-            throw new NotImplementedException();
+            var order = await _context.Orders.Where(o => o.ID == id).FirstOrDefaultAsync();
+            order.Status = -1;
+            await _context.SaveChangesAsync();
+            return true;
         }
 
-        public async Task<Order> GetOrderDetail(int id)
+        public async Task<List<OrderRequest>> GetAll()
         {
-            var orderDetail = from o in _context.Orders
-                              join od in _context.OrderDetails on o.ID equals od.OrderID
-                              join p in _context.Products on od.ProductID equals p.ID
-                              join u in _context.User on o.CustommerId equals u.ID
-                              where od.OrderID == id
-                              select new { o, od, p, u };
+            var orders = await _context.Orders.Select(o => new OrderRequest()
+            {
+                ID = o.ID,
+                CustomerAddress = o.CustomerAddress,
+                CustomerName = o.CustomerName,
+                CustomerMobile = o.CustomerMobile,
+                CustommerMessage = o.CustomerMessage,
+                CustommerId = o.CustommerId,
+                Status = o.Status,
+                CreateDate = o.CreateDate,
+                TotalPrice = _context.OrderDetails.Where(x => x.OrderID == o.ID).Sum(x => x.Price),
+                TotalQuantity = _context.OrderDetails.Where(x => x.OrderID == o.ID).Sum(x => x.Quantity),
+            }).ToListAsync();
 
-            return new Order();
+            return orders;
+        }
+
+        public async Task<List<OrderRequest>> GetOrderByUser(string userName)
+        {
+            var getUser = await _context.User.Where(x => x.Username == userName).FirstOrDefaultAsync();
+
+            var orders = await _context.Orders.Where(x => x.CustommerId == getUser.ID).Select(o => new OrderRequest()
+            {
+                ID = o.ID,
+                CustomerAddress = o.CustomerAddress,
+                CustomerName = o.CustomerName,
+                CustomerMobile = o.CustomerMobile,
+                CustommerMessage = o.CustomerMessage,
+                CustommerId = o.CustommerId,
+                Status = o.Status,
+                CreateDate = o.CreateDate,
+                TotalPrice = _context.OrderDetails.Where(x => x.OrderID == o.ID).Sum(x => x.Price),
+                TotalQuantity = _context.OrderDetails.Where(x => x.OrderID == o.ID).Sum(x => x.Quantity),
+            }).ToListAsync();
+
+            return orders;
+        }
+
+        public async Task<OrderDetailRequest> GetOrderDetail(int orderId)
+        {
+            var orderDetails = await _context.Orders.Where(x => x.ID == orderId).Select(x => new OrderDetailRequest()
+            {
+                OrderId = x.ID,
+                OrderStatus = x.Status,
+                CustommerName = x.CustomerName,
+                Address = x.CustomerAddress,
+                Mobile = x.CustomerMobile,
+            }).FirstOrDefaultAsync();
+
+            var getProduct = await _context.OrderDetails.Where(x => x.OrderID == orderId).Select(x => new OrderDetailViewModel()
+            {
+                OrderID = x.OrderID,
+                ProductID = x.ProductID,
+                Price = x.Price,
+                Quantity = x.Quantity,
+                ProductName = _context.Products.Where(p => p.ID == x.ProductID).Select(n => n.Name).FirstOrDefault(),
+            }).ToListAsync();
+
+            orderDetails.OrderDetails = getProduct;
+
+            return orderDetails;
         }
 
         public async Task<List<Order>> getOrders()
@@ -76,9 +138,12 @@ namespace Services.Catalog.Orders
             return orders;
         }
 
-        public Task<bool> TakeOrder(int id)
+        public async Task<bool> TakeOrder(int id)
         {
-            throw new NotImplementedException();
+            var order = await _context.Orders.Where(o => o.ID == id).FirstOrDefaultAsync();
+            order.Status = 1;
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

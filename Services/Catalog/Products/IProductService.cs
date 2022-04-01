@@ -24,7 +24,7 @@ namespace Services.Catalog.Products
         Task<List<ProductInCategoryRequest>> getProductByCateId(int id);
 
         Task<ProductRequest> GetById(int id);
-        Task<List<Product>> GetAll();
+        Task<List<ProductListRequest>> GetAll();
 
         Task<Product> FindById(int id);
 

@@ -32,22 +32,16 @@
                 <thead>
                     <tr>
                         <th>
-                            @Html.DisplayNameFor(model => model.ID)
+                          Mã danh mục
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Name)
+                            Tên danh mục
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.ParentID)
+                           Danh mục cha
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Status)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.CreateTime)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.UpdateTime)
+                           Trạng thái
                         </th>
                         <th></th>
                     </tr>
@@ -67,17 +61,11 @@
                                 @Html.DisplayFor(modelItem => item.ParentID)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Status)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.CreateTime)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.UpdateTime)
+                                @Html.ActionLink( item.Status==0?"Hiện":"Ẩn", "Hide","ProductCategory", new { id= item.ID },new { @class= "btn btn-outline-warning"})
                             </td>
                             <td>
                                 @Html.ActionLink("Edit", "Edit", new {id= item.ID },new { @class= "btn btn-outline-primary"}) |
-                                @Html.ActionLink( item.Status==0?"Hiện":"Ẩn", "Hide","ProductCategory", new { id= item.ID },new { @class= "btn btn-outline-warning"}) |
+                              
                                 @Html.ActionLink("Delete", "Delete", new { id= item.ID },new { @class= "btn btn-outline-info"})
                             </td>
                         </tr>

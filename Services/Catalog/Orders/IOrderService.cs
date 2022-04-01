@@ -1,10 +1,7 @@
 ﻿using Data.Entites;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ViewModels.Catalog.Checkout;
+using ViewModels.Catalog.OrderDetails;
+using ViewModels.Catalog.Orders;
 
 namespace Services.Catalog.Orders
 {
@@ -12,12 +9,18 @@ namespace Services.Catalog.Orders
     {
         public Task<List<Order>> getOrders();
 
-        public Task<Order> GetOrderDetail(int id);
-
         public Task<bool> DestroyOrder(int id);
+
         public Task<bool> TakeOrder(int id);
+
         public Task<bool> CompleteOrder(int id);
 
         public Task<bool> ComfirmOrder(CheckOutRequest request);
+
+        public Task<List<OrderRequest>> GetOrderByUser(string userName);
+
+        public Task<OrderDetailRequest> GetOrderDetail(int orderId);
+
+        public Task<List<OrderRequest>> GetAll();
     }
 }

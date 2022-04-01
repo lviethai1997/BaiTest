@@ -10,7 +10,7 @@ namespace ViewModels.Catalog.Products
 
         public int Quantity { get; set; }
 
-        public IFormFile Image { get; set; }
+        public IFormFile? Image { get; set; }
 
         public string? ImagePath { get; set; }
 

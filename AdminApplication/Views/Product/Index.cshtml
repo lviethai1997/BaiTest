@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Data.Entites.Product>
+﻿@model List<ViewModels.Catalog.Products.ProductListRequest>
 
 @{
     ViewData["Title"] = "Index";
@@ -34,30 +34,23 @@
                 <thead>
                     <tr>
                         <th>
-                            @Html.DisplayNameFor(model => model.ID)
+                            Mã sản phẩm
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Name)
+                            Tên sản phẩm
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.CategoryID)
+                            Danh mục
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Quantity)
-                        </th>
-
-                        <th>
-                            @Html.DisplayNameFor(model => model.Price)
+                            Tồn kho
                         </th>
 
                         <th>
-                            @Html.DisplayNameFor(model => model.CreateTime)
+                            Giá tiền
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.UpdatedDate)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Status)
+                            Trạng thái
                         </th>
                         <th></th>
                     </tr>
@@ -66,6 +59,8 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
+                        var price = item.Price.ToString("n0");
+
                         <tr>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ID)
@@ -74,28 +69,19 @@
                                 @Html.DisplayFor(modelItem => item.Name)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.CategoryID)
+                                @Html.DisplayFor(modelItem => item.CateName)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Quantity)
                             </td>
-
                             <td>
-                                @Html.DisplayFor(modelItem => item.Price)
-                            </td>
-
-                            <td>
-                                @Html.DisplayFor(modelItem => item.CreateTime)
+                                @Html.DisplayFor(modelItem => price)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.UpdatedDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Status)
+                                @Html.ActionLink( item.Status==0?"Hiện":"Ẩn", "Hide","Product", new { id= item.ID },new { @class= "btn btn-outline-warning"})
                             </td>
                             <td>
                                 @Html.ActionLink("Edit", "Edit", new { id= item.ID},new {@class= "btn btn-outline-primary"}) |
-                                @Html.ActionLink( item.Status==0?"Hiện":"Ẩn", "Hide","Product", new { id= item.ID },new { @class= "btn btn-outline-warning"}) |
                                 @Html.ActionLink("Delete", "Delete", new { id= item.ID },new {@class= "btn btn-outline-info"})
                             </td>
                         </tr>

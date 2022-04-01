@@ -1,17 +1,14 @@
-﻿namespace ViewModels.Catalog.OrderDetails
+﻿using Data.Entites;
+
+namespace ViewModels.Catalog.OrderDetails
 {
     public class OrderDetailRequest
     {
-        public int Username { get; set; }
-
-        public string FullName { get; set; }
+        public int OrderId { get; set; }
+        public int OrderStatus { get; set; }    
+        public string CustommerName { get; set; }
         public string Address { get; set; }
-        public string Email { get; set; }
         public string Mobile { get; set; }
-        public string ProductName { get; set; }
-        public string ImagePath { get; set; }
-        public decimal PriceProduct { get; set; }
-        public int QuantityCart { get; set; }
-        public decimal PriceCart { get; set; }
+        public List<OrderDetailViewModel> OrderDetails { get; set; }
     }
 }
