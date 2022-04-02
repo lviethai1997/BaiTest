@@ -20,5 +20,10 @@ Asp.net MVC 6 project
 •	Change SystemConstants.baseURL to your URL of AdminApplication in Data project
 •	You also have to install .net hosting bundle 6.0 and .net framework 4.8 runtime
 
+User and password:
+Username : admin
+Password: Admin@123
 
+Username : user
+Password: Admin@123
 
