@@ -21,17 +21,8 @@ namespace Data.EF
             modelBuilder.Entity<Order>().ToTable("Orders");
             modelBuilder.Entity<Order>().HasOne(x => x.User).WithMany(x => x.Orders).HasForeignKey(x => x.CustommerId);
 
-            modelBuilder.Entity<ProductCategory>().ToTable("ProductCategories");
-            modelBuilder.Entity<Product>().HasKey(x => x.ID);
-            modelBuilder.Entity<Product>().Property(x => x.ID).UseIdentityColumn();
-
             modelBuilder.Entity<Product>().ToTable("Products");
-            modelBuilder.Entity<Product>().HasKey(x => x.ID);
-            modelBuilder.Entity<Product>().Property(x => x.ID).UseIdentityColumn();
             modelBuilder.Entity<Product>().HasOne(t => t.ProductCategory).WithMany(pc => pc.Products).HasForeignKey(pc => pc.CategoryID);
-
-           
-
 
             modelBuilder.Seed();
         }
