@@ -22,7 +22,7 @@ namespace Data.Extensions
 
             modelBuilder.Entity<User>().HasData(
                 new User() { ID = 1, Username = "admin", Password = "0e7517141fb53f21ee439b355b5a1d0a", FullName = "Administrator", Address = "Binh Duong", Email = "lviethai1997@gmail.com", Mobile = "18184846456", Role = 0, Status = 0 },
-                new User() { ID = 1, Username = "user", Password = "0e7517141fb53f21ee439b355b5a1d0a", FullName = "hai le", Address = "Binh Duong", Email = "lviethai1997@gmail.com", Mobile = "18184846456", Role = 0, Status = 0 }
+                new User() { ID = 2, Username = "user", Password = "0e7517141fb53f21ee439b355b5a1d0a", FullName = "hai le", Address = "Binh Duong", Email = "lviethai1997@gmail.com", Mobile = "18184846456", Role = 0, Status = 0 }
                 );
 
             modelBuilder.Entity<ProductCategory>().HasData(

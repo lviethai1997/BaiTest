@@ -20,7 +20,7 @@ namespace Data.EF
             modelBuilder.Entity<OrderDetail>().HasOne(x => x.Product).WithMany(x => x.OrderDetails).HasForeignKey(x => x.ProductID);
             base.OnModelCreating(modelBuilder);
 
-            //ModelBuilderExtensions.Seed(modelBuilder);
+            modelBuilder.Seed();
         }
 
         public DbSet<Product> Products { get; set; }
