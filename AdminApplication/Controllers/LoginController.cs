@@ -10,6 +10,7 @@ namespace AdminApplication.Controllers
     public class LoginController : Controller
     {
         private readonly IUserService _userService;
+
         public LoginController(IUserService userService)
         {
             _userService = userService;
@@ -21,12 +22,17 @@ namespace AdminApplication.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Login()
+        {
+            return View("Index");
+        }
+
         [HttpPost]
         public async Task<ActionResult> Login(LoginRequest request)
         {
             if (!ModelState.IsValid)
             {
-                return View();
+                return View("Index");
             }
 
             var login = await _userService.Login(request);
@@ -44,12 +50,11 @@ namespace AdminApplication.Controllers
                 IsPersistent = true,
             };
 
-
             var claims = new List<Claim>
-        {
+            {
             new Claim(ClaimTypes.Name,request.Username),
             new Claim(ClaimTypes.Role, "Administrator"),
-        };
+            };
 
             var claimsIdentity = new ClaimsIdentity(
                 claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -58,7 +63,7 @@ namespace AdminApplication.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [Route("/logout.html", Name = "logout")]
+   
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
