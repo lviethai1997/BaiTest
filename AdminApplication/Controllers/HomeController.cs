@@ -2,15 +2,10 @@
 
 namespace AdminApplication.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         public IActionResult Index()
         {
-            var session = HttpContext.Session.GetString("SessionUser");
-            if (session == null)
-            {
-                return RedirectToAction("Index", "Login");
-            }
             return View();
         }
     }

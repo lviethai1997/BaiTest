@@ -4,6 +4,11 @@
 @using ViewModels.Catalog.Login
 @inject IHttpContextAccessor HttpContextAccessor
 @model IEnumerable<Data.Entites.ProductCategory>
+@{
+    var session = HttpContextAccessor.HttpContext.Session;
+    string jsoncart = session.GetString(WebClientApplication.Controllers.ProductController.CARTKEY);
+    string sessionuser = session.GetString("SessionUser");
+}
 
 <header class="header_area sticky-header">
     <div class="main_menu">
@@ -26,38 +31,36 @@
                             var url = "/category-" + cate.ID + ".html";
                             <li class="nav-item"><a class="nav-link" href="@url">@cate.Name</a></li>
                         }
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-
                         @{
-                            var session = HttpContextAccessor.HttpContext.Session;
-                            string jsoncart = session.GetString(WebClientApplication.Controllers.ProductController.CARTKEY);
-                            string sessionuser = session.GetString("SessionUser");
+                            if (sessionuser != null)
+                            {
 
-                            if(sessionuser != null)
-                            {
-                       
                                 <li class="nav-item">
-                                    <a href="/orders.html"><span class="text" id="Login"></span>@sessionuser</a>
-                                </li>
-                            }else
-                            {
-                                <li class="nav-item">
-                                    <a href="/loginuser.html"><span class="lnr lnr-user" id="Login"></span></a>
+                                    <a href="/orders.html" class="nav-link"><span class="text" id="Login"></span>@sessionuser</a>
                                 </li>
                             }
-
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a href="/loginuser.html" class="nav-link"><span class="lnr lnr-user" id="Login"></span>Đăng nhập</a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        @{
                             if (jsoncart != null)
                             {
                                 var cart = JsonConvert.DeserializeObject<List<CartItemRequest>>(jsoncart);
+                                <li class="nav-item"></li>
                                 <li class="nav-item"><a href="/cart" class="cart"><span class="ti-bag">(@cart.Count)</span></a></li>
                             }
                             else
                             {
+                                <li class="nav-item"></li>
                                 <li class="nav-item"><a href="/cart" class="cart"><span class="ti-bag"></span></a></li>
                             }
                         }
-                      
                     </ul>
                 </div>
             </div>

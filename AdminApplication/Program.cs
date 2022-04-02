@@ -19,6 +19,7 @@ builder.Services.AddNotyf(config => { config.DurationInSeconds = 3; config.IsDis
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
 {
     options.LoginPath = "/Login/Index";
+    options.SlidingExpiration = true;
 });
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -54,17 +55,18 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
+var cookiePolicyOptions = new CookiePolicyOptions
+{
+    MinimumSameSitePolicy = SameSiteMode.Strict,
+};
+app.UseCookiePolicy(cookiePolicyOptions);
 app.UseNotyf();
 app.MapRazorPages();
 app.UseSession();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}");
-});
+app.MapDefaultControllerRoute();
+
 
 app.Run();

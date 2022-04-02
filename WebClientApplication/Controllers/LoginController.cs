@@ -10,6 +10,7 @@ namespace WebClientApplication.Controllers
         private readonly IUserService _userService;
         public const string UserKey = "SessionUser";
         private readonly INotyfService _notyf;
+
         public LoginController(IUserService userService, INotyfService notyfService)
         {
             _userService = userService;

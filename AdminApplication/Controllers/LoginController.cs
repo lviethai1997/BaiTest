@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Services.Catalog.Users;
+using System.Security.Claims;
 using ViewModels.Catalog.Login;
 
 namespace AdminApplication.Controllers
@@ -37,14 +38,31 @@ namespace AdminApplication.Controllers
 
             HttpContext.Session.SetString("SessionUser", request.Username);
 
+            var authPropreties = new AuthenticationProperties
+            {
+                ExpiresUtc = System.DateTimeOffset.UtcNow.AddMinutes(10),
+                IsPersistent = true,
+            };
+
+
+            var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name,request.Username),
+            new Claim(ClaimTypes.Role, "Administrator"),
+        };
+
+            var claimsIdentity = new ClaimsIdentity(
+                claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authPropreties);
+
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpPost]
+        [Route("/logout.html", Name = "logout")]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            HttpContext.Session.Remove("Username");
+            HttpContext.Session.Remove("SessionUser");
             return RedirectToAction("Index", "Login");
         }
     }

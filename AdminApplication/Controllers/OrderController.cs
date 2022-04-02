@@ -4,7 +4,7 @@ using Services.Catalog.Orders;
 
 namespace AdminApplication.Controllers
 {
-    public class OrderController : Controller
+    public class OrderController : BaseController
     {
         private readonly IOrderService _orderService;
         private readonly INotyfService _notyf;
