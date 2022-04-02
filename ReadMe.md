@@ -12,7 +12,7 @@ Asp.net MVC 6 project
 •	Set startup project Data
 •	Change connection string in Appsetting.json and SystemConstants.SQLcnn in Data project
 •	Open Tools --> Nuget Package Manager --> Package Manager Console in Visual Studio
-•	Run Update-database and Enter.
+•	Run "add-migration CreateDatabase" then run "Update-database and Enter".
 •	Set multiple run project: Right click to Solution and choose Properties and set Multiple Project, choose Start for 2 Projects: AdminApplication, WebClientApplication.
 •	Choose profile to run or press F5
 

@@ -23,6 +23,6 @@ namespace Data.Entites
         public DateTime CreateTime { get; set; }
         public DateTime UpdateTime { get; set; }
 
-        public virtual List<Product> Products { get; set; }
+        public List<Product> Products { get; set; }
     }
 }

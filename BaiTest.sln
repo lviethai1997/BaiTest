@@ -11,7 +11,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminApplication", "AdminAp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{98B39115-A3AD-4993-B1DE-CC48C75BEDF0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebClientApplication", "WebClientApplication\WebClientApplication.csproj", "{2BF3E79F-AA04-4806-84E1-89E719205A1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebClientApplication", "WebClientApplication\WebClientApplication.csproj", "{2BF3E79F-AA04-4806-84E1-89E719205A1F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6AC71918-639F-43BE-9539-BB88BABDB81A}"
+	ProjectSection(SolutionItems) = preProject
+		ReadMe.md = ReadMe.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

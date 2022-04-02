@@ -13,7 +13,7 @@ namespace Data.EF
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-            var connectionString = configuration.GetConnectionString(SystemConstants.SQLcnn);
+            var connectionString = configuration.GetConnectionString("BaiTestDb");
 
             var optionsBuilder = new DbContextOptionsBuilder<ShopDbContext>();
             optionsBuilder.UseSqlServer(connectionString);

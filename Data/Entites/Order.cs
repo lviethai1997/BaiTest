@@ -42,8 +42,7 @@ namespace Data.Entites
 
         public DateTime CreateDate { get; set; }
 
-        [ForeignKey("CustommerId")]
-        public virtual User Users { set; get; }
+        public virtual User User { set; get; }
 
         public virtual List<OrderDetail> OrderDetails { get; set; }
     }

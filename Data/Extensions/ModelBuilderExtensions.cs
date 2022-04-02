@@ -7,6 +7,14 @@ namespace Data.Extensions
     {
         public static void Seed(this ModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<ProductCategory>().HasData(
+            new ProductCategory() { ID = 1, Name = "CPU", ParentID = 0, CreateTime = DateTime.Now, UpdateTime = DateTime.Now },
+            new ProductCategory() { ID = 2, Name = "Ram", ParentID = 0, CreateTime = DateTime.Now, UpdateTime = DateTime.Now },
+            new ProductCategory() { ID = 3, Name = "PSU", ParentID = 0, CreateTime = DateTime.Now, UpdateTime = DateTime.Now },
+            new ProductCategory() { ID = 5, Name = "Mainboard", ParentID = 0, CreateTime = DateTime.Now, UpdateTime = DateTime.Now }
+            );
+
             modelBuilder.Entity<Product>().HasData(
                new Product() { ID = 1, Name = "Ram Kingston 8G", CategoryID = 2, Quantity = 15, Description = "ok", CreateTime = DateTime.Now, UpdatedDate = DateTime.Now, Status = 0, ImagePath = "/user-content/fbc4ad81-9d8d-475b-a849-fb0e37e0fa38.png" },
                new Product() { ID = 2, Name = "RAM APACER 8GB PANTHER DDR4 BUS 3200", CategoryID = 2, Quantity = 15, Description = "ok", CreateTime = DateTime.Now, UpdatedDate = DateTime.Now, Status = 0, ImagePath = "/user-content/346d040f-f5ff-439b-8603-ff971ee67f1e.jpg" },
@@ -25,12 +33,7 @@ namespace Data.Extensions
                 new User() { ID = 2, Username = "user", Password = "0e7517141fb53f21ee439b355b5a1d0a", FullName = "hai le", Address = "Binh Duong", Email = "lviethai1997@gmail.com", Mobile = "18184846456", Role = 0, Status = 0 }
                 );
 
-            modelBuilder.Entity<ProductCategory>().HasData(
-                new ProductCategory() { ID = 1, Name = "CPU", ParentID = 0, CreateTime = DateTime.Now, UpdateTime = DateTime.Now },
-                new ProductCategory() { ID = 2, Name = "Ram", ParentID = 0, CreateTime = DateTime.Now, UpdateTime = DateTime.Now },
-                new ProductCategory() { ID = 3, Name = "PSU", ParentID = 0, CreateTime = DateTime.Now, UpdateTime = DateTime.Now },
-                new ProductCategory() { ID = 4, Name = "Mainboard", ParentID = 0, CreateTime = DateTime.Now, UpdateTime = DateTime.Now }
-                );
+        
         }
     }
 }

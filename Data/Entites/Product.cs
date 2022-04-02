@@ -7,9 +7,9 @@ namespace Data.Entites
     [Table("Products")]
     public class Product
     {
-        [Key]
+         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ID { get; set; }
+        public int ID { set; get; }
 
         [Required]
         [MaxLength(256)]
@@ -34,8 +34,7 @@ namespace Data.Entites
 
         public int Status { get; set; }
 
-        [ForeignKey("CategoryID")]
-        public virtual ProductCategory ProductCategory { get; set; }
-        public virtual List<OrderDetail> OrderDetails { get; set; }
+        public ProductCategory ProductCategory { get; set; }
+        public List<OrderDetail> OrderDetails { get; set; }
     }
 }
