@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.AspNetCore.Mvc;
 using Services.Catalog.Orders;
 
 namespace WebClientApplication.Controllers
@@ -6,12 +7,15 @@ namespace WebClientApplication.Controllers
     public class OrderController : Controller
     {
         private readonly IOrderService _orderService;
-        public OrderController(IOrderService orderService)
+        private readonly INotyfService _notyf;
+
+        public OrderController(IOrderService orderService, INotyfService notyfService)
         {
             _orderService = orderService;
+            _notyf = notyfService;
         }
 
-       [Route("/orders.html",Name = "orders")]
+        [Route("/orders.html", Name = "orders")]
         public async Task<IActionResult> Index()
         {
             string Username = HttpContext.Session.GetString("SessionUser");
@@ -26,10 +30,18 @@ namespace WebClientApplication.Controllers
             return View(orderdetail);
         }
 
-        [Route("/OrderCancel.{id}.html",Name = "OrderCancel")]
+        [Route("/OrderCancel.{id}.html", Name = "OrderCancel")]
         public async Task<IActionResult> DestroyOrder(int id)
         {
             var destroy = await _orderService.DestroyOrder(id);
+            if (destroy.status == true)
+            {
+                _notyf.Success(destroy.Message);
+            }
+            else
+            {
+                _notyf.Success(destroy.Message);
+            }
             return RedirectToAction("Index");
         }
     }

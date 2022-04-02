@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Services.Catalog.Orders;
 using Services.Catalog.Products;
@@ -11,11 +12,13 @@ namespace WebClientApplication.Controllers
         private readonly IProductService _productService;
         private readonly IOrderService _orderService;
         public const string CARTKEY = "cart";
+        private readonly INotyfService _notyf;
 
-        public ProductController(IProductService productService, IOrderService orderService)
+        public ProductController(IProductService productService, IOrderService orderService, INotyfService notyfService)
         {
             _productService = productService;
             _orderService = orderService;
+            _notyf = notyfService;
         }
 
         public IActionResult Index()
@@ -30,7 +33,16 @@ namespace WebClientApplication.Controllers
 
             var comfirm = await _orderService.ComfirmOrder(items);
 
-            return RedirectToAction("Confirmation", "Product");
+            if (comfirm.status == true)
+            {
+                _notyf.Success(comfirm.Message);
+                return RedirectToAction("Confirmation", "Product");
+            }
+            else
+            {
+                _notyf.Error(comfirm.Message);
+                return RedirectToAction("Cart", "Product");
+            }
         }
 
         [Route("/Confirmation", Name = "Confirmation")]
@@ -61,7 +73,8 @@ namespace WebClientApplication.Controllers
             string Username = HttpContext.Session.GetString("SessionUser");
             if (string.IsNullOrEmpty(Username))
             {
-                return RedirectToAction("Index", "Home");
+                _notyf.Error("Vui lòng đăng nhập để thanh toán");
+                return RedirectToAction("Index", "Login");
             }
 
             var items = await _productService.getCheckOut(Username, GetCartItems());
@@ -74,6 +87,7 @@ namespace WebClientApplication.Controllers
             var product = await _productService.FindById(id);
             if (product.Quantity == 0)
             {
+                _notyf.Error("Sản phẩm này không còn tồn kho");
                 return RedirectToAction("Index", "Home");
             }
 
@@ -88,6 +102,8 @@ namespace WebClientApplication.Controllers
                 cart.Add(new CartItemRequest() { quantity = 1, product = product });
             }
             SaveCartSession(cart);
+            _notyf.Success("Thêm vào giỏ hành thành công");
+
             return RedirectToAction(nameof(Cart));
         }
 
@@ -128,6 +144,7 @@ namespace WebClientApplication.Controllers
                 cartitem.quantity = quantity;
             }
             SaveCartSession(cart);
+            _notyf.Success("Cập nhật giỏ hành thành công");
             // Trả về mã thành công (không có nội dung gì - chỉ để Ajax gọi)
             return Ok();
         }
@@ -144,6 +161,7 @@ namespace WebClientApplication.Controllers
             }
 
             SaveCartSession(cart);
+            _notyf.Success("Xóa sản phẩm giỏ hành thành công");
             return RedirectToAction(nameof(Cart));
         }
     }

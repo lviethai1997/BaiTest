@@ -15,7 +15,7 @@ namespace WebClientApplication.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var products = await _productService.GetAll();
+            var products = await _productService.GetAllForClient();
             IEnumerable<ProductListRequest> productsList = products;
             return View(productsList);
         }

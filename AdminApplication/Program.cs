@@ -1,3 +1,5 @@
+using AspNetCoreHero.ToastNotification;
+using AspNetCoreHero.ToastNotification.Extensions;
 using Data.EF;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +8,6 @@ using Services.Catalog.ProductCategories;
 using Services.Catalog.Products;
 using Services.Catalog.Users;
 using Services.Common;
-using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +15,7 @@ builder.Services.AddDbContext<ShopDbContext>(options =>
             options.UseSqlServer("Server=.;Database=ShopDB;Trusted_Connection=True;"));
 
 builder.Services.AddHttpClient();
-
+builder.Services.AddNotyf(config => { config.DurationInSeconds = 3; config.IsDismissable = true; config.Position = NotyfPosition.TopRight; });
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
 {
     options.LoginPath = "/Login/Index";
@@ -52,11 +53,10 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-
 app.UseRouting();
 
 app.UseAuthorization();
-
+app.UseNotyf();
 app.MapRazorPages();
 app.UseSession();
 

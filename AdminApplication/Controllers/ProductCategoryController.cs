@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Services.Catalog.ProductCategories;
 using ViewModels.Catalog.ProductCategories;
@@ -7,31 +7,34 @@ namespace AdminApplication.Controllers
 {
     public class ProductCategoryController : Controller
     {
-
         private readonly IProductCategoryService _productCategoryService;
+        private readonly INotyfService _notyf;
 
-        public ProductCategoryController(IProductCategoryService productCategoryService)
+        public ProductCategoryController(IProductCategoryService productCategoryService, INotyfService notyf)
         {
             _productCategoryService = productCategoryService;
+            _notyf = notyf;
         }
 
         // GET: ProductCategoryController
         public async Task<ActionResult> Index()
         {
             var productCategory = await _productCategoryService.GetAll();
-
-            if (TempData["result"] != null)
-            {
-                ViewBag.message = TempData["result"];
-            }
-
             return View(productCategory);
         }
 
-
         // GET: ProductCategoryController/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
+            var cbParent = await _productCategoryService.GetAll();
+            List<object> cate = new List<object>();
+            cate.Add(new { ID = 0, Name = "Danh mục cha" });
+            foreach (var item in cbParent)
+            {
+                cate.Add(new { ID = item.ID, Name = item.Name });
+            }
+            ViewBag.cate = cate;
+
             return View();
         }
 
@@ -40,21 +43,31 @@ namespace AdminApplication.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(ProductCategoryRequest collection)
         {
+            var cbParent = await _productCategoryService.GetAll();
+            List<object> cate = new List<object>();
+            cate.Add(new { ID = 0, Name = "Danh mục cha" });
+            foreach (var item in cbParent)
+            {
+                cate.Add(new { ID = item.ID, Name = item.Name });
+            }
+            ViewBag.cate = cate;
+
             if (!ModelState.IsValid)
             {
-                return View();
+                return View(collection);
             }
-
             var result = await _productCategoryService.CreateProductCategory(collection);
 
-            if (result == true)
+            if (result.status == true)
             {
-                TempData["result"] = "Success";
+                _notyf.Success(result.Message);
                 return RedirectToAction("Index");
             }
-
-            TempData["result"] = "Failed";
-            return View(collection);
+            else
+            {
+                _notyf.Error(result.Message);
+                return View(collection);
+            }
         }
 
         // GET: ProductCategoryController/Edit/5
@@ -62,7 +75,22 @@ namespace AdminApplication.Controllers
         {
             var productCategory = await _productCategoryService.GetById(id);
 
-            return View(productCategory);
+            var Request = new ProductCategoryRequest{
+            ParentID = productCategory.ParentID,
+            Name = productCategory.Name,
+            Status = productCategory.Status,
+            };
+
+            var cbParent = await _productCategoryService.GetAll();
+            List<object> cate = new List<object>();
+            cate.Add(new { ID = 0, Name = "Danh mục cha" });
+            foreach (var item in cbParent)
+            {
+                cate.Add(new { ID = item.ID, Name = item.Name });
+            }
+            ViewBag.cate = cate;
+
+            return View(Request);
         }
 
         // POST: ProductCategoryController/Edit/5
@@ -70,21 +98,31 @@ namespace AdminApplication.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(int id, ProductCategoryRequest collection)
         {
+            var cbParent = await _productCategoryService.GetAll();
+            List<object> cate = new List<object>();
+            cate.Add(new { ID = 0, Name = "Danh mục cha" });
+            foreach (var item in cbParent)
+            {
+                cate.Add(new { ID = item.ID, Name = item.Name });
+            }
+            ViewBag.cate = cate;
             if (!ModelState.IsValid)
             {
-                return View();
+                return View(collection);
             }
 
             var result = await _productCategoryService.UpdateProductCategory(id, collection);
 
-            if (result == true)
+            if (result.status == true)
             {
-                TempData["result"] = "Success";
+                _notyf.Success(result.Message);
                 return RedirectToAction("Index");
             }
-
-            TempData["result"] = "Failed";
-            return View(collection);
+            else
+            {
+                _notyf.Error(result.Message);
+                return View(collection);
+            }
         }
 
         // GET: ProductCategoryController/Delete/5
@@ -101,14 +139,16 @@ namespace AdminApplication.Controllers
         {
             var result = await _productCategoryService.DeleteProductCategory(id);
 
-            if (result == true)
+            if (result.status == true)
             {
-                TempData["result"] = "Success";
+                _notyf.Success(result.Message);
                 return RedirectToAction("Index");
             }
-
-            TempData["result"] = "Failed";
-            return View(collection);
+            else
+            {
+                _notyf.Error(result.Message);
+                return RedirectToAction("Index");
+            }
         }
 
         [HttpGet]
@@ -116,14 +156,16 @@ namespace AdminApplication.Controllers
         {
             var result = await _productCategoryService.HideProductCategory(id);
 
-            if (result == true)
+            if (result.status == true)
             {
-                TempData["result"] = "Success";
+                _notyf.Success(result.Message);
                 return RedirectToAction("Index");
             }
-
-            TempData["result"] = "Failed";
-            return RedirectToAction("Index");
+            else
+            {
+                _notyf.Error(result.Message);
+                return RedirectToAction("Index");
+            }
         }
     }
 }

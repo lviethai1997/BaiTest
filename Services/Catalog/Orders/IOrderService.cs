@@ -2,6 +2,7 @@
 using ViewModels.Catalog.Checkout;
 using ViewModels.Catalog.OrderDetails;
 using ViewModels.Catalog.Orders;
+using ViewModels.Common;
 
 namespace Services.Catalog.Orders
 {
@@ -9,13 +10,13 @@ namespace Services.Catalog.Orders
     {
         public Task<List<Order>> getOrders();
 
-        public Task<bool> DestroyOrder(int id);
+        public Task<PageActionResult> DestroyOrder(int id);
 
-        public Task<bool> TakeOrder(int id);
+        public Task<PageActionResult> TakeOrder(int id);
 
-        public Task<bool> CompleteOrder(int id);
+        public Task<PageActionResult> CompleteOrder(int id);
 
-        public Task<bool> ComfirmOrder(CheckOutRequest request);
+        public Task<PageActionResult> ComfirmOrder(CheckOutRequest request);
 
         public Task<List<OrderRequest>> GetOrderByUser(string userName);
 

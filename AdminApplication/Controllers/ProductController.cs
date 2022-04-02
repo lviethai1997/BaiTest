@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.AspNetCore.Mvc;
 using Services.Catalog.ProductCategories;
 using Services.Catalog.Products;
 using ViewModels.Catalog.ProductCategories;
@@ -10,11 +11,13 @@ namespace AdminApplication.Controllers
     {
         private readonly IProductService _productService;
         private readonly IProductCategoryService _productCategoryService;
+        private readonly INotyfService _notyf;
 
-        public ProductController(IProductService productService, IProductCategoryService productCategoryService)
+        public ProductController(IProductService productService, IProductCategoryService productCategoryService, INotyfService notyfService)
         {
             _productService = productService;
             _productCategoryService = productCategoryService;
+            _notyf = notyfService;
         }
 
         [HttpGet]
@@ -22,10 +25,6 @@ namespace AdminApplication.Controllers
         {
             var products = await _productService.GetAll();
 
-            if (TempData["result"] != null)
-            {
-                ViewBag.message = TempData["result"];
-            }
             return View(products);
         }
 
@@ -36,7 +35,6 @@ namespace AdminApplication.Controllers
             List<CbCategories> cate = await Category;
 
             ViewBag.category = cate;
-
 
             return View();
         }
@@ -55,16 +53,19 @@ namespace AdminApplication.Controllers
             }
 
             var result = await _productService.CreateProduct(request);
-            if (result == true)
+
+            if (result.status == true)
             {
-                TempData["result"] = "Success";
+                _notyf.Success(result.Message);
                 return RedirectToAction("Index");
             }
             else
             {
-                TempData["result"] = "Failed";
+                _notyf.Error(result.Message);
                 return View(request);
             }
+
+          
         }
 
         [HttpGet]
@@ -91,14 +92,14 @@ namespace AdminApplication.Controllers
             }
 
             var result = await _productService.UpdateProduct(id, request);
-            if (result == true)
+            if (result.status == true)
             {
-                TempData["result"] = "Success";
+                _notyf.Success(result.Message);
                 return RedirectToAction("Index");
             }
             else
             {
-                TempData["result"] = "Failed";
+                _notyf.Error(result.Message);
                 return View(request);
             }
         }
@@ -114,15 +115,15 @@ namespace AdminApplication.Controllers
         public async Task<IActionResult> Delete(int id, IFormCollection collections)
         {
             var result = await _productService.DeleteProduct(id);
-            if (result == true)
+            if (result.status == true)
             {
-                TempData["result"] = "Success";
+                _notyf.Success(result.Message);
                 return RedirectToAction("Index");
             }
             else
             {
-                TempData["result"] = "Failed";
-                return View();
+                _notyf.Error(result.Message);
+                return RedirectToAction("Index");
             }
         }
 
@@ -131,14 +132,16 @@ namespace AdminApplication.Controllers
         {
             var result = await _productService.HideProduct(id);
 
-            if (result == true)
+            if (result.status == true)
             {
-                TempData["result"] = "Success";
+                _notyf.Success(result.Message);
                 return RedirectToAction("Index");
             }
-
-            TempData["result"] = "Failed";
-            return RedirectToAction("Index");
+            else
+            {
+                _notyf.Error(result.Message);
+                return RedirectToAction("Index");
+            }
         }
     }
 }

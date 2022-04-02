@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ViewModels.Catalog.Checkout;
 using ViewModels.Catalog.OrderDetails;
 using ViewModels.Catalog.Orders;
+using ViewModels.Common;
 
 namespace Services.Catalog.Orders
 {
@@ -17,7 +18,7 @@ namespace Services.Catalog.Orders
         }
 
         // -1 da huy don,0 dang cho xu ly, 1 dang van chuyen, 2 hoan thanh
-        public async Task<bool> ComfirmOrder(CheckOutRequest request)
+        public async Task<PageActionResult> ComfirmOrder(CheckOutRequest request)
         {
             var order = new Order()
             {
@@ -32,7 +33,7 @@ namespace Services.Catalog.Orders
                 CustomerMessage = "OK"
             };
             var addOrder = _context.Orders.Add(order);
-            _context.SaveChanges();
+            var result = _context.SaveChanges();
 
             var orderDetails = new List<OrderDetail>();
             foreach (var item in request.carts)
@@ -48,25 +49,70 @@ namespace Services.Catalog.Orders
                 var addOrderDetail = _context.OrderDetails.Add(detail);
             }
 
-            _context.SaveChanges();
+            result = _context.SaveChanges();
 
-            return true;
+            if (result > 0)
+            {
+                return new PageActionResult { status = true, Message = "Đặt hàng thành công!" };
+            }
+            else
+            {
+                return new PageActionResult { status = false, Message = "Đặt hàng Thất bại!" };
+            }
         }
 
-        public async Task<bool> CompleteOrder(int id)
+        public async Task<PageActionResult> CompleteOrder(int id)
         {
             var order = await _context.Orders.Where(o => o.ID == id).FirstOrDefaultAsync();
+
+            if (order.Status == -1)
+            {
+                return new PageActionResult { status = false, Message = "Đơn hàng này đã hủy nên không thể Hoàn thành" };
+            }
+
+            if (order.Status == 0)
+            {
+                return new PageActionResult { status = false, Message = "Đơn hàng chưa được nhận nên không thể Hoàn thành" };
+            }
+
+            if (order.Status == 2)
+            {
+                return new PageActionResult { status = false, Message = "Đơn hàng đã Hoàn thành trước đó" };
+            }
+
             order.Status = 2;
-            await _context.SaveChangesAsync();
-            return true;
+            var result = await _context.SaveChangesAsync();
+
+            if (result > 0)
+            {
+                return new PageActionResult { status = true, Message = "Đơn hàng đã được hoàn thành" };
+            }
+            else
+            {
+                return new PageActionResult { status = false, Message = "Đơn hàng chưa được hoàn thành" };
+            }
+
         }
 
-        public async Task<bool> DestroyOrder(int id)
+        public async Task<PageActionResult> DestroyOrder(int id)
         {
             var order = await _context.Orders.Where(o => o.ID == id).FirstOrDefaultAsync();
+
+            if (order.Status == 2)
+            {
+                return new PageActionResult { status = false, Message = "Đơn hàng này đã hoàn thành nên không thể HỦY" };
+            }
+
             order.Status = -1;
-            await _context.SaveChangesAsync();
-            return true;
+            var result = await _context.SaveChangesAsync();
+            if (result > 0)
+            {
+                return new PageActionResult { status = true, Message = "Đơn hàng đã được HỦY" };
+            }
+            else
+            {
+                return new PageActionResult { status = false, Message = "Đơn hàng chưa được HỦY" };
+            }
         }
 
         public async Task<List<OrderRequest>> GetAll()
@@ -140,12 +186,36 @@ namespace Services.Catalog.Orders
             return orders;
         }
 
-        public async Task<bool> TakeOrder(int id)
+        public async Task<PageActionResult> TakeOrder(int id)
         {
             var order = await _context.Orders.Where(o => o.ID == id).FirstOrDefaultAsync();
+
+            if (order.Status == -1)
+            {
+                return new PageActionResult { status = false, Message = "Đơn hàng này đã hủy nên không thể nhận đơn" };
+            }
+
+            if (order.Status == 1)
+            {
+                return new PageActionResult { status = false, Message = "Đơn hàng này đang xử lý nên không thể nhận đơn" };
+            }
+
+            if (order.Status == 2)
+            {
+                return new PageActionResult { status = false, Message = "Đơn hàng đã Hoàn thành trước đó" };
+            }
+
             order.Status = 1;
-            await _context.SaveChangesAsync();
-            return true;
+            var result = await _context.SaveChangesAsync();
+
+            if (result > 0)
+            {
+                return new PageActionResult { status = true, Message = "Đơn hàng đã đã được nhận" };
+            }
+            else
+            {
+                return new PageActionResult { status = false, Message = "Đơn hàng chưa được nhận" };
+            }
         }
     }
 }

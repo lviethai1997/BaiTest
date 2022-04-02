@@ -6,8 +6,8 @@ using Services.Common;
 using System.Net.Http.Headers;
 using ViewModels.Catalog.Cart;
 using ViewModels.Catalog.Checkout;
-using ViewModels.Catalog.ProductCategories;
 using ViewModels.Catalog.Products;
+using ViewModels.Common;
 
 namespace Services.Catalog.Products
 {
@@ -23,7 +23,7 @@ namespace Services.Catalog.Products
             _storageService = serviceProvider;
         }
 
-        public async Task<bool> CreateProduct(ProductRequest request)
+        public async Task<PageActionResult> CreateProduct(ProductRequest request)
         {
             var product = new Product()
             {
@@ -34,28 +34,37 @@ namespace Services.Catalog.Products
                 Description = request.Description,
                 CreateTime = DateTime.Now,
                 UpdatedDate = DateTime.Now,
-                Status = request.Status
-
+                Status = request.Status,
+                ImagePath = await this.SaveFile(request.Image)
             };
 
-            if (request.Image != null)
-            {
-                product.ImagePath = await this.SaveFile(request.Image);
-            }
-
             _shopDbContext.Add(product);
-            await _shopDbContext.SaveChangesAsync();
-
-            return true;
+            var result = await _shopDbContext.SaveChangesAsync();
+            if (result > 0)
+            {
+                return new PageActionResult { status = true, Message = "Thêm mới sản phẩm thành công!" };
+            }
+            else
+            {
+                return new PageActionResult { status = false, Message = "Thêm mới sản phẩm thất bại!" };
+            }
         }
 
-        public async Task<bool> DeleteProduct(int id)
+        public async Task<PageActionResult> DeleteProduct(int id)
         {
             var product = await _shopDbContext.Products.FirstOrDefaultAsync(x => x.ID == id);
             await _storageService.DeleteFileAsync(product.ImagePath);
             _shopDbContext.Remove(product);
-            await _shopDbContext.SaveChangesAsync();
-            return true;
+            var result = await _shopDbContext.SaveChangesAsync();
+
+            if (result > 0)
+            {
+                return new PageActionResult { status = true, Message = "Xóa sản phẩm thành công!" };
+            }
+            else
+            {
+                return new PageActionResult { status = false, Message = "Xóa sản phẩm thất bại!" };
+            }
         }
 
         public async Task<Product> FindById(int id)
@@ -113,7 +122,6 @@ namespace Services.Catalog.Products
             };
 
             return cars;
-
         }
 
         public async Task<List<ProductInCategoryRequest>> getProductByCateId(int id)
@@ -136,18 +144,35 @@ namespace Services.Catalog.Products
             return reuslt;
         }
 
-        public async Task<bool> HideProduct(int id)
+        public async Task<PageActionResult> HideProduct(int id)
         {
             var product = await _shopDbContext.Products.FindAsync(id);
 
             product.Status = product.Status == 0 ? 1 : 0;
 
-            await _shopDbContext.SaveChangesAsync();
+            var result = await _shopDbContext.SaveChangesAsync();
 
-            return true;
+            string message = "";
+            if (product.Status == 0)
+            {
+                message = "Hiện sản phẩm thành công!";
+            }
+            else
+            {
+                message = "Ẩn sản phẩm thành công!";
+            }
+
+            if (result > 0)
+            {
+                return new PageActionResult { status = true, Message = message };
+            }
+            else
+            {
+                return new PageActionResult { status = false, Message = message };
+            }
         }
 
-        public async Task<bool> UpdateProduct(int id, ProductRequest request)
+        public async Task<PageActionResult> UpdateProduct(int id, ProductRequest request)
         {
             var product = await _shopDbContext.Products.FindAsync(id);
 
@@ -166,9 +191,16 @@ namespace Services.Catalog.Products
             }
 
             _shopDbContext.Update(product);
-            await _shopDbContext.SaveChangesAsync();
+            var result = await _shopDbContext.SaveChangesAsync();
 
-            return true;
+            if (result > 0)
+            {
+                return new PageActionResult { status = true, Message = "Cập nhật sản phẩm thành công!" };
+            }
+            else
+            {
+                return new PageActionResult { status = false, Message = "Cập nhật sản phẩm thất bại!" };
+            }
         }
 
         private async Task<string> SaveFile(IFormFile file)
@@ -177,6 +209,22 @@ namespace Services.Catalog.Products
             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
             await _storageService.SaveFileAsync(file.OpenReadStream(), fileName);
             return "/" + USER_CONTENT_FOLDER_NAME + "/" + fileName;
+        }
+
+        public async Task<List<ProductListRequest>> GetAllForClient()
+        {
+            var products = await _shopDbContext.Products.Where(x => x.Status == 0).Select(x => new ProductListRequest()
+            {
+                ImagePath = x.ImagePath,
+                ID = x.ID,
+                Name = x.Name,
+                CateName = _shopDbContext.ProductCategories.Where(p => p.ID == x.CategoryID).Select(p => p.Name).FirstOrDefault(),
+                Quantity = x.Quantity,
+                Price = x.Price,
+                Status = x.Status
+            }).ToListAsync();
+
+            return products;
         }
     }
 }

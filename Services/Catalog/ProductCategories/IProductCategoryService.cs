@@ -1,21 +1,23 @@
 ﻿using Data.Entites;
 using ViewModels.Catalog.ProductCategories;
+using ViewModels.Common;
 
 namespace Services.Catalog.ProductCategories
 {
     public interface IProductCategoryService
     {
-        Task<bool> CreateProductCategory(ProductCategoryRequest request);
+        Task<PageActionResult> CreateProductCategory(ProductCategoryRequest request);
 
-        Task<bool> UpdateProductCategory(int id,ProductCategoryRequest request);
+        Task<PageActionResult> UpdateProductCategory(int id,ProductCategoryRequest request);
 
-        Task<bool> DeleteProductCategory(int id);
+        Task<PageActionResult> DeleteProductCategory(int id);
 
-        Task<bool> HideProductCategory(int id);
+        Task<PageActionResult> HideProductCategory(int id);
 
         Task<ProductCategory> GetById(int id);
         Task<List<ProductCategory>> GetAll();
 
         Task<List<CbCategories>> getCategory();
+        Task<List<ProductCategory>> GetAllForClient();
     }
 }

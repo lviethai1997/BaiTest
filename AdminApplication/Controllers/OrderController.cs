@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.AspNetCore.Mvc;
 using Services.Catalog.Orders;
 
 namespace AdminApplication.Controllers
@@ -6,10 +7,12 @@ namespace AdminApplication.Controllers
     public class OrderController : Controller
     {
         private readonly IOrderService _orderService;
+        private readonly INotyfService _notyf;
 
-        public OrderController(IOrderService orderService)
+        public OrderController(IOrderService orderService, INotyfService notyfService)
         {
             _orderService = orderService;
+            _notyf = notyfService;
         }
 
         public async Task<IActionResult> Index()
@@ -24,22 +27,47 @@ namespace AdminApplication.Controllers
             return View(orderDetail);
         }
 
-
         public async Task<IActionResult> TakeOrder(int id)
         {
-            await _orderService.TakeOrder(id);
+            var result = await _orderService.TakeOrder(id);
+
+            if (result.status == true)
+            {
+                _notyf.Success(result.Message);
+            }
+            else
+            {
+                _notyf.Error(result.Message);
+            }
+
             return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> CompleteOrder(int id)
         {
-            await _orderService.CompleteOrder(id);
+            var result = await _orderService.CompleteOrder(id);
+            if (result.status == true)
+            {
+                _notyf.Success(result.Message);
+            }
+            else
+            {
+                _notyf.Error(result.Message);
+            }
             return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> DestroyOrder(int id)
         {
-            await _orderService.DestroyOrder(id);
+            var result = await _orderService.DestroyOrder(id);
+            if (result.status == true)
+            {
+                _notyf.Success(result.Message);
+            }
+            else
+            {
+                _notyf.Error(result.Message);
+            }
             return RedirectToAction("Index");
         }
     }

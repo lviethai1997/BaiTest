@@ -18,7 +18,7 @@ namespace WebClientApplication.Controllers.Component
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var cate = await _productCategoryService.GetAll();
+            var cate = await _productCategoryService.GetAllForClient();
             return View(cate);
         }
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.AspNetCore.Mvc;
 using Services.Catalog.Users;
 using ViewModels.Catalog.Login;
 
@@ -8,9 +9,11 @@ namespace WebClientApplication.Controllers
     {
         private readonly IUserService _userService;
         public const string UserKey = "SessionUser";
-        public LoginController(IUserService userService)
+        private readonly INotyfService _notyf;
+        public LoginController(IUserService userService, INotyfService notyfService)
         {
             _userService = userService;
+            _notyf = notyfService;
         }
 
         public IActionResult Index()
@@ -30,12 +33,12 @@ namespace WebClientApplication.Controllers
 
             if (login == false)
             {
-                ModelState.AddModelError("", "Tài khoản hoặc mật khẩu không đúng");
+                _notyf.Error("Tài khoản hoặc mật khẩu không đúng");
                 return RedirectToAction("Index", "Login");
             }
 
             HttpContext.Session.SetString(UserKey, request.Username);
-
+            _notyf.Success("Đăng nhập thành công!");
             return RedirectToAction("Index", "Home");
         }
     }

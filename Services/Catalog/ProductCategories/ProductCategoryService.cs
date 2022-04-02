@@ -1,8 +1,8 @@
 ﻿using Data.EF;
 using Data.Entites;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ViewModels.Catalog.ProductCategories;
+using ViewModels.Common;
 
 namespace Services.Catalog.ProductCategories
 {
@@ -15,7 +15,7 @@ namespace Services.Catalog.ProductCategories
             _context = context;
         }
 
-        public async Task<bool> CreateProductCategory(ProductCategoryRequest request)
+        public async Task<PageActionResult> CreateProductCategory(ProductCategoryRequest request)
         {
             var productCategory = new ProductCategory()
             {
@@ -27,21 +27,53 @@ namespace Services.Catalog.ProductCategories
             };
 
             await _context.ProductCategories.AddAsync(productCategory);
-            await _context.SaveChangesAsync();
-            return true;
+            var result = await _context.SaveChangesAsync();
+
+            if (result > 0)
+            {
+                return new PageActionResult { status = true, Message = "Tạo danh mục sản phẩm Thành Công!" };
+            }
+            else
+            {
+                return new PageActionResult { status = false, Message = "Tạo danh mục sản phẩm Thất bại!" };
+            }
         }
 
-        public async Task<bool> DeleteProductCategory(int id)
+        public async Task<PageActionResult> DeleteProductCategory(int id)
         {
             var FindProductCategory = await _context.ProductCategories.FindAsync(id);
 
-            if (FindProductCategory != null)
+            if (FindProductCategory == null)
             {
-                _context.Remove(FindProductCategory);
-                await _context.SaveChangesAsync();
-                return true;
+                return new PageActionResult { status = false, Message = "Không tồn tại danh mục này" };
             }
-            return false;
+
+            _context.Remove(FindProductCategory);
+            var result = await _context.SaveChangesAsync();
+
+            if (result > 0)
+            {
+                return new PageActionResult { status = true, Message = "Xóa danh mục sản phẩm thành công!" };
+            }
+            else
+            {
+                return new PageActionResult { status = false, Message = "Xóa danh mục sản phẩm Thất bại!" };
+            }
+        }
+
+        public async Task<List<ProductCategory>> GetAllForClient()
+        {
+            var getAll = await _context.ProductCategories.Where(x => x.Status == 0).Select(x => new ProductCategory()
+            {
+                ID = x.ID,
+                Name = x.Name,
+                ParentID = x.ParentID,
+                CreateTime = x.CreateTime,
+                UpdateTime = x.UpdateTime,
+                Status = x.Status,
+            }).ToListAsync();
+
+            return new List<ProductCategory>(getAll);
         }
 
         public async Task<List<ProductCategory>> GetAll()
@@ -67,7 +99,6 @@ namespace Services.Catalog.ProductCategories
             {
                 return null;
             }
-          
 
             return FindById;
         }
@@ -76,43 +107,80 @@ namespace Services.Catalog.ProductCategories
         {
             var category = await _context.ProductCategories.OrderBy(x => x.ID).Select(x => new CbCategories()
             {
-                ID=x.ID,
-                Name=x.Name
+                ID = x.ID,
+                Name = x.Name
             }).ToListAsync();
 
             return category;
         }
 
-        public async Task<bool> HideProductCategory(int id)
+        public async Task<PageActionResult> HideProductCategory(int id)
         {
             var findById = await _context.ProductCategories.FindAsync(id);
-            if (findById != null)
+
+            if (findById == null)
             {
-                findById.Status = findById.Status == 0 ? 1 : 0;
-                await _context.SaveChangesAsync();
-                return true;
+                return new PageActionResult { status = false, Message = "Không tồn tại danh mục này" };
             }
 
-            return false;
+
+            findById.Status = findById.Status == 0 ? 1 : 0;
+            var productInCate = await _context.Products.Where(x => x.CategoryID == id).ToListAsync();
+
+            foreach (var product in productInCate)
+            {
+                product.Status = findById.Status;
+            }
+
+            var result = await _context.SaveChangesAsync();
+
+            string message = "";
+
+            if (findById.Status == 0)
+            {
+                message = "Hiện Danh mục sản phẩm thành công";
+            }
+            else
+            {
+                message = "Ẩn Danh mục sản phẩm thành công";
+            }
+
+            if (result > 0)
+            {
+                return new PageActionResult { status = true, Message = message };
+            }
+            else
+            {
+                return new PageActionResult { status = false, Message = message };
+            }
         }
 
-        public async Task<bool> UpdateProductCategory(int id, ProductCategoryRequest request)
+        public async Task<PageActionResult> UpdateProductCategory(int id, ProductCategoryRequest request)
         {
             var findByid = await _context.ProductCategories.FindAsync(id);
 
-            if (findByid != null)
+            if (findByid == null)
             {
-                findByid.Name = request.Name;
-                findByid.ParentID = request.ParentID;
-                findByid.UpdateTime = DateTime.Now;
-                findByid.CreateTime = request.CreateTime;
-                findByid.Status = request.Status;
-
-                await _context.SaveChangesAsync();
-
-                return true;
+                return new PageActionResult { status = false, Message = "Không tồn tại danh mục này" };
             }
-            return false;
+
+            findByid.Name = request.Name;
+            findByid.ParentID = request.ParentID;
+            findByid.UpdateTime = DateTime.Now;
+            findByid.CreateTime = request.CreateTime;
+            findByid.Status = request.Status;
+
+            var result = await _context.SaveChangesAsync();
+
+            if (result > 0)
+            {
+                return new PageActionResult { status = true, Message = "Cập nhật danh mục sản phẩm thành công!" };
+            }
+            else
+            {
+                return new PageActionResult { status = false, Message = "Cập nhật danh mục sản phẩm thất bại!" };
+            }
+
         }
     }
 }

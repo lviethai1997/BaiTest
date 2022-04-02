@@ -92,7 +92,7 @@
                                 </td>
                                 <td>
                                     <div class="checkout_btn_inner d-flex align-items-center">
-                                        <a class="gray_btn" href="/index.html">Continue Shopping</a>
+                                        <a class="gray_btn" href="/index.html">Tiếp tục mua sắm</a>
                                         <a asp-controller="Product" asp-action="Checkout" class="primary-btn">Tiếp tục thanh toán</a>
                                     </div>
                                 </td>
@@ -129,5 +129,10 @@
 }
 else
 {
-    <p class="alert alert-danger">Giỏ hàng trống</p>
+    <section class="order_details section_gap">
+		<div class="container">
+			<h1 class="alert alert-danger">Không có sản phẩm nào trong giỏ hàng</h1>
+		</div>
+	</section>
+
 }
