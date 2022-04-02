@@ -1,8 +1,10 @@
 using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
+using Data;
 using Data.EF;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using Services;
 using Services.Catalog.Orders;
 using Services.Catalog.ProductCategories;
 using Services.Catalog.Products;
@@ -12,7 +14,7 @@ using Services.Common;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ShopDbContext>(options =>
-            options.UseSqlServer("Server=.;Database=ShopDB;Trusted_Connection=True;"));
+            options.UseSqlServer(Data.SystemConstants.SQLcnn));
 
 builder.Services.AddHttpClient();
 builder.Services.AddNotyf(config => { config.DurationInSeconds = 3; config.IsDismissable = true; config.Position = NotyfPosition.TopRight; });
@@ -67,6 +69,5 @@ app.MapRazorPages();
 app.UseSession();
 
 app.MapDefaultControllerRoute();
-
 
 app.Run();

@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Services
+namespace Data
 {
     public class SystemConstants
     {
         public const string Baseurl = "https://localhost:7204/";
+        public const string SQLcnn = "Server=.;Database=ShopDB;Trusted_Connection=True;";
     }
 }

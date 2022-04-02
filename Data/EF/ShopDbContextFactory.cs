@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Data.EF
 {
@@ -18,7 +13,7 @@ namespace Data.EF
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-            var connectionString = configuration.GetConnectionString("BaiTestDb");
+            var connectionString = configuration.GetConnectionString(SystemConstants.SQLcnn);
 
             var optionsBuilder = new DbContextOptionsBuilder<ShopDbContext>();
             optionsBuilder.UseSqlServer(connectionString);

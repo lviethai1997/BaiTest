@@ -1,4 +1,5 @@
 ﻿@using ViewModels.Catalog.Cart;
+    using Data;
 @model List<CartItemRequest>;
 @{
     ViewData["Title"] = "Cart";
@@ -45,7 +46,7 @@
                                     <td>
                                         <div class="media">
                                             <div class="d-flex">
-                                                <img src="@(Services.SystemConstants.Baseurl+cartitem.product.ImagePath)" alt="@cartitem.product.Name" style="width:50px;height:50px">
+                                                <img src="@(Data.SystemConstants.Baseurl+cartitem.product.ImagePath)" alt="@cartitem.product.Name" style="width:50px;height:50px">
                                             </div>
                                             <div class="media-body">
                                                 <p>@cartitem.product.Name</p>
