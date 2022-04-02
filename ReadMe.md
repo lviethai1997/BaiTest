@@ -1,29 +1,29 @@
 Asp.net MVC 6 project
 
-1.	Install Tools :
-•	.net framework 4.8
-•	.net 6.0
-•	MS 2022
-•	SQL Server 2019
+1.	Install Tools :</br>
+â€¢.net framework 4.8</br>
+â€¢	.net 6.0</br>
+â€¢	MS 2022</br>
+â€¢	SQL Server 2019</br>
 
-2.	How to run project:
-•	Clone code from Github : git clone https://github.com/lviethai1997/BaiTest.git
-•	Open BaiTest.sln in Visual Studio 
-•	Set startup project Data
-•	Change connection string in Appsetting.json and SystemConstants.SQLcnn in Data project
-•	Open Tools --> Nuget Package Manager --> Package Manager Console in Visual Studio
-•	Run "add-migration CreateDatabase" press enter then run "Update-database and Enter".
-•	Set multiple run project: Right click to Solution and choose Properties and set Multiple Project, choose Start for 2 Projects: AdminApplication, WebClientApplication.
-•	Choose profile to run or press F5
+2.	How to run project:</br>
+â€¢	Clone code from Github : git clone https://github.com/lviethai1997/BaiTest.git</br>
+â€¢	Open BaiTest.sln in Visual Studio </br>
+â€¢	Set startup project Data</br>
+â€¢	Change connection string in Appsetting.json and SystemConstants.SQLcnn in Data project</br>
+â€¢	Open Tools --> Nuget Package Manager --> Package Manager Console in Visual Studio</br>
+â€¢	Run "add-migration CreateDatabase" press enter then run "Update-database and Enter".</br>
+â€¢	Set multiple run project: Right click to Solution and choose Properties and set Multiple Project, choose Start for 2 Projects: AdminApplication, WebClientApplication.</br>
+â€¢	Choose profile to run or press F5</br>
 
-3.	If you want up project to ISS:
-•	Change SystemConstants.baseURL to your URL of AdminApplication in Data project
-•	You also have to install .net hosting bundle 6.0 and .net framework 4.8 runtime
+3.	If you want up project to ISS:</br>
+â€¢	Change SystemConstants.baseURL to your URL of AdminApplication in Data project</br>
+â€¢	You also have to install .net hosting bundle 6.0 and .net framework 4.8 runtime</br>
 
-User and password:
-Username : admin
-Password: Admin@123
+User and password for testing: </br>
+Username : admin </br>
+Password: Admin@123</br>
 
-Username : user
+Username : user</br>
 Password: Admin@123
 
