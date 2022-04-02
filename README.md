@@ -1,7 +1,7 @@
 Asp.net MVC 6 project
 
 1.	Install Tools :
-	•.net framework 4.8
+	• .net framework 4.8
 	•.net 6.0
 	•MS 2022
 	•SQL Server 2019
@@ -19,3 +19,4 @@ Asp.net MVC 6 project
 3.	If you want up project to ISS:
 	•Change SystemConstants.baseURL to URL of AdminApplication  in Data project
 	•You also have to install .net hosting bundle 6.0 and .net framework 4.8 runtime
+
